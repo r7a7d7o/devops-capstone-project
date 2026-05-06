@@ -64,6 +64,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(account.address, fake_account.address)
         self.assertEqual(account.phone_number, fake_account.phone_number)
         self.assertEqual(account.date_joined, fake_account.date_joined)
+        self.assertEqual(repr(account), ("<Account {0} id=[{1}]>").format(account.name, account.id ))
 
     def test_add_a_account(self):
         """It should Create an account and add it to the database"""
@@ -175,3 +176,18 @@ class TestAccount(unittest.TestCase):
         """It should not Deserialize an account with a TypeError"""
         account = Account()
         self.assertRaises(DataValidationError, account.deserialize, [])
+
+    def test_deserialize_with_type_error(self):
+        """It should not Deserialize an account with a TypeError"""
+        account = AccountFactory()
+        account.create()
+        serial_account = account.serialize()
+        new_account = Account()
+        serial_account["date_joined"] = "1"
+        new_account.deserialize(serial_account)
+        self.assertRaises(DataValidationError, new_account.deserialize(serial_account), [])
+    
+    def test_init_id(self):
+        """It should confirm __init__"""
+        account = Account()
+        self.assertEqual(account.id, None)
