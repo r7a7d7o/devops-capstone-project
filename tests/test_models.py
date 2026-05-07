@@ -2,11 +2,12 @@
 Test cases for Account Model
 
 """
+from datetime import date
 import logging
 import unittest
 import os
 from service import app
-from service.models import Account, DataValidationError, db
+from service.models import Account, DataValidationError, db, PersistentBase
 from tests.factories import AccountFactory
 
 DATABASE_URI = os.getenv(
@@ -177,17 +178,23 @@ class TestAccount(unittest.TestCase):
         account = Account()
         self.assertRaises(DataValidationError, account.deserialize, [])
 
-    def test_deserialize_with_type_error(self):
-        """It should not Deserialize an account with a TypeError"""
+    def test_deserialize_with_missing_date(self):
+        """It should Deserialize an account with a Missing date ans place todays Date"""
         account = AccountFactory()
         account.create()
         serial_account = account.serialize()
         new_account = Account()
-        serial_account["date_joined"] = "1"
+        serial_account["date_joined"] = None
         new_account.deserialize(serial_account)
-        self.assertRaises(DataValidationError, new_account.deserialize(serial_account), [])
+        date_joined = date.today()
+        self.assertEqual(new_account.date_joined, date_joined)
     
-    def test_init_id(self):
-        """It should confirm __init__"""
+    def test_init_class_account(self):
+        """It should confirm Class Account initialize"""
         account = Account()
+        self.assertEqual(account.id, None)
+
+    def test_init_class_PersistentBase(self):
+        """It should confirm Class PersistentBase initialize"""
+        account = PersistentBase()
         self.assertEqual(account.id, None)
