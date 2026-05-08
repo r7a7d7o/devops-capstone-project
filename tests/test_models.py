@@ -65,7 +65,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(account.address, fake_account.address)
         self.assertEqual(account.phone_number, fake_account.phone_number)
         self.assertEqual(account.date_joined, fake_account.date_joined)
-        self.assertEqual(repr(account), ("<Account {0} id=[{1}]>").format(account.name, account.id ))
+        self.assertEqual(repr(account), ("<Account {0} id=[{1}]>").format(account.name, account.id))
 
     def test_add_a_account(self):
         """It should Create an account and add it to the database"""
@@ -188,7 +188,7 @@ class TestAccount(unittest.TestCase):
         new_account.deserialize(serial_account)
         date_joined = date.today()
         self.assertEqual(new_account.date_joined, date_joined)
-    
+
     def test_init_class_account(self):
         """It should confirm Class Account initialize"""
         account = Account()
